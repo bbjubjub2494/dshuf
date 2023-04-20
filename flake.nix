@@ -11,7 +11,7 @@
           mkShell {
             buildInputs = [
               # To compile curl under Rust
-                openssl.dev
+              openssl.dev
               pkg-config
             ];
           };
