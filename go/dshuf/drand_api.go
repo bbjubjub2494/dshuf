@@ -1,18 +1,30 @@
 package dshuf
 
 import (
-	"context"
+	"encoding/hex"
 	"github.com/drand/drand/client"
 	"github.com/drand/drand/client/http"
 )
 
-const URL = "https://drand.cloudflare.com"
+const defaultChainHash = "8990e7a9aaed2ffed73dbd7092123d6f289930540d7651336225dc172e51b2ce"
 
-func GetDrandSignatures(roundNumber uint64) (client.Result, error) {
-	ctx := context.Background() // we are a client
-	client, err := http.New(URL, nil, nil)
+var urls = []string{
+	"https://api.drand.sh",
+	"https://drand.cloudflare.com",
+}
+
+func DefaultClient() (client.Client, error) {
+	return makeClient(defaultChainHash)
+}
+
+func makeClient(chainHash string) (client.Client, error) {
+	chainHashBytes, err := hex.DecodeString(chainHash)
 	if err != nil {
 		return nil, err
 	}
-	return client.Get(ctx, roundNumber)
+
+	return client.New(
+		client.From(http.ForURLs(urls, chainHashBytes)...),
+		client.WithChainHash(chainHashBytes),
+	)
 }
