@@ -3,6 +3,7 @@ module github.com/bbjubjub2494/dshuf/go
 go 1.19
 
 require (
+	github.com/alecthomas/kong v0.8.0
 	github.com/drand/drand v1.5.3
 	github.com/zeebo/blake3 v0.2.3
 )
