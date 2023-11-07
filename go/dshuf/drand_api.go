@@ -14,6 +14,14 @@ var urls = []string{
 	"https://drand.cloudflare.com",
 }
 
+func EmptyClient() (client.Client, error) {
+	chainInfo, err := chain.InfoFromJSON(bytes.NewBufferString(quicknetChainInfoJson))
+	if err != nil {
+		return nil, err
+	}
+	return client.EmptyClientWithInfo(chainInfo), nil
+}
+
 func DefaultClient() (client.Client, error) {
 	chainInfo, err := chain.InfoFromJSON(bytes.NewBufferString(quicknetChainInfoJson))
 	if err != nil {
