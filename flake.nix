@@ -10,7 +10,9 @@
       imports = [
         inputs.hercules-ci-effects.flakeModule
       ];
-      systems = ["x86_64-linux" "aarch64-linux"];
+      systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
+      # NOTE: I do not have runners for darwin
+      herculesCI.ciSystems = ["x86_64-linux" "aarch64-linux"];
 
       hercules-ci.flake-update.enable = true;
       hercules-ci.flake-update.when.dayOfWeek = "Sat";
