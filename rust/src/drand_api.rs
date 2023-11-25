@@ -7,10 +7,9 @@ pub fn quicknet_chaininfo() -> ChainInfo {
 }
 
 pub fn get_beacon(round_number: u64) -> Result<RandomnessBeacon, DrandError> {
-    let api_baseurl = format!(
-        "https://drand.cloudflare.com/{}",
-        hex::encode(quicknet_chaininfo().hash())
-    );
+    let endpoint =
+        std::env::var("DSHUF_ENDPOINT").unwrap_or("https://drand.cloudflare.com".to_string());
+    let api_baseurl = format!("{}/{}", endpoint, hex::encode(quicknet_chaininfo().hash()));
     let options = ChainOptions::new(
         true,
         true,
