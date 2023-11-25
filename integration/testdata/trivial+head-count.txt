@@ -1,0 +1,11 @@
+stdin input
+exec dshuf --beacon=1 -n 2
+cmp stdout output
+
+-- input --
+Alice
+Bob
+Carla
+-- output --
+Alice
+Carla
