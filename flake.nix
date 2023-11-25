@@ -3,9 +3,18 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+  inputs.hercules-ci-effects.url = "github:hercules-ci/hercules-ci-effects";
+
   outputs = inputs @ {flake-parts, ...}:
     flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [
+        inputs.hercules-ci-effects.flakeModule
+      ];
       systems = ["x86_64-linux" "aarch64-linux"];
+
+      hercules-ci.flake-update.enable = true;
+      hercules-ci.flake-update.when.dayOfWeek = "Sat";
+
       perSystem = {pkgs, ...}: {
         packages.dshuf-go = pkgs.buildGoModule rec {
           pname = "dshuf-go";
