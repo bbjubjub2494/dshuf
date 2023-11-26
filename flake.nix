@@ -17,8 +17,8 @@
       hercules-ci.flake-update.enable = true;
       hercules-ci.flake-update.when.dayOfWeek = "Sat";
 
-      perSystem = {pkgs, ...}: {
-        packages.dshuf-go = pkgs.buildGoModule rec {
+      perSystem = {pkgs, ...}: let
+        implementations.dshuf-go = pkgs.buildGoModule rec {
           pname = "dshuf-go";
           version = "unstable";
           # workaround: src is a mandatory argument
@@ -35,7 +35,7 @@
           vendorHash = "sha256-k6fgQ022tmhFeNFo5x/7ZK4Pv6bOqh4eI4mKQ5gje9g=";
         };
 
-        packages.dshuf-rust = with pkgs;
+        implementations.dshuf-rust = with pkgs;
           rustPlatform.buildRustPackage {
             pname = "dshuf-rust";
             version = "unstable";
@@ -50,6 +50,8 @@
               pkg-config
             ];
           };
+      in {
+        packages = implementations;
 
         devShells.default = with pkgs;
           mkShell {
@@ -59,7 +61,18 @@
               pkg-config
             ];
           };
+
         formatter = pkgs.alejandra;
+
+        checks = builtins.mapAttrs (_: impl:
+          pkgs.buildGoModule {
+            name = "${impl.pname}-check";
+            src = ./integration;
+
+            vendorHash = "sha256-1p3dCLLo+MTPxf/Y3zjxTagUi+tq7nZSj4ZB/aakJGY=";
+            nativeCheckInputs = [impl];
+          })
+        implementations;
       };
     };
 }
