@@ -29,6 +29,7 @@ impl TestCase {
 #[test_case("basic_more")]
 #[test_case("basic_other_input")]
 #[test_case("basic_other_randomness")]
+#[test_case("basic_repetitions")]
 fn it_works(name: &str) {
     let tc = TestCase::parse(name);
     let input: Vec<&[u8]> = tc.input.iter().map(|v| v.as_bytes()).collect();
