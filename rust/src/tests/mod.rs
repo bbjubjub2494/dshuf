@@ -31,11 +31,9 @@ impl TestCase {
 #[test_case("basic_other_randomness")]
 fn it_works(name: &str) {
     let tc = TestCase::parse(name);
-    let input: Vec<Vec<u8>> = tc.input.iter().map(|v| hex::decode(v).unwrap()).collect();
-    let input: Vec<&[u8]> = input.iter().map(|v| v.as_slice()).collect();
+    let input: Vec<&[u8]> = tc.input.iter().map(|v| v.as_bytes()).collect();
     let randomness = hex::decode(tc.randomness).unwrap();
     let limit = tc.limit;
-    let output: Vec<Vec<u8>> = tc.output.iter().map(|v| hex::decode(v).unwrap()).collect();
-    let output: Vec<&[u8]> = output.iter().map(|v| v.as_slice()).collect();
+    let output: Vec<&[u8]> = tc.output.iter().map(|v| v.as_bytes()).collect();
     assert_eq!(output, shuffle(randomness[..].try_into().unwrap(), input, limit));
 }
