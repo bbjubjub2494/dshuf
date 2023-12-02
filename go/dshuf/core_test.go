@@ -30,19 +30,19 @@ func (b *HexBytes) UnmarshalJSON(buf []byte) error {
 }
 
 // Helper
-func unwrap(b []HexBytes) [][]byte {
+func unwrap(b []string) [][]byte {
 	r := make([][]byte, len(b))
 	for i := range b {
-		r[i] = b[i]
+		r[i] = []byte(b[i])
 	}
 	return r
 }
 
 type TestCase struct {
-	Input      []HexBytes `json:"input"`
-	Randomness HexBytes   `json:"randomness"`
-	Limit      int        `json:"limit"`
-	Output     []HexBytes `json:"output"`
+	Input      []string `json:"input"`
+	Randomness HexBytes `json:"randomness"`
+	Limit      int      `json:"limit"`
+	Output     []string `json:"output"`
 }
 
 func loadTestCase(t *testing.T, name string) (tc TestCase) {
