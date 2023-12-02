@@ -43,10 +43,11 @@ func fetchRandomness(beacon *uint64) ([]byte, error) {
 }
 
 var cli struct {
-	HeadCount *int    `short:"n" long:"head-count" placeholder:"COUNT" help:"output at most this many lines"`
-	Beacon    *uint64 `short:"b" required:"" help:"round number of beacon to use for randomness"`
-	File      string  `arg:"" optional:"" type:"existingfile"`
-	ZeroSep   bool    `short:"z" long:"zero-terminated" help:"line delimiter is NUL, not newline"`
+	HeadCount   *int    `short:"n" long:"head-count" placeholder:"COUNT" help:"output at most this many lines"`
+	Beacon      *uint64 `short:"b" required:"" help:"round number of beacon to use for randomness"`
+	Repetitions bool    `short:"r" long:"repeat" help:"output lines can be repeated"`
+	File        string  `arg:"" optional:"" type:"existingfile"`
+	ZeroSep     bool    `short:"z" long:"zero-terminated" help:"line delimiter is NUL, not newline"`
 }
 
 func main() {
@@ -76,9 +77,17 @@ func main() {
 	if cli.HeadCount != nil {
 		n = *cli.HeadCount
 	}
-	dshuf.ShuffleInplace(randomness, &entries, n)
-	for _, e := range entries {
-		os.Stdout.Write(e)
-		os.Stdout.Write(separator)
+	if cli.Repetitions {
+		c := dshuf.ShuffleWithReplacement(randomness, entries)
+		for i := 0; cli.HeadCount == nil || i < n; i++ {
+			os.Stdout.Write(<-c)
+			os.Stdout.Write(separator)
+		}
+	} else {
+		dshuf.ShuffleInplace(randomness, &entries, n)
+		for _, e := range entries {
+			os.Stdout.Write(e)
+			os.Stdout.Write(separator)
+		}
 	}
 }
