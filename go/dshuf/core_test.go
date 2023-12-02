@@ -64,11 +64,11 @@ func loadTestCase(t *testing.T, name string) (tc TestCase) {
 
 func checkListEqual(t *testing.T, expected, actual [][]byte) {
 	if len(expected) != len(actual) {
-		t.Fatalf("expected: %x got: %x", actual, actual)
+		t.Fatalf("expected: %d got: %d", len(expected), len(actual))
 	}
 	for i := range actual {
-		if !bytes.Equal(actual[i], actual[i]) {
-			t.Fatalf("expected: %x got: %x", actual, actual)
+		if !bytes.Equal(expected[i], actual[i]) {
+			t.Fatalf("expected: %x got: %x", expected[i], actual[i])
 		}
 	}
 }
