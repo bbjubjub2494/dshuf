@@ -101,3 +101,7 @@ func TestCase_BasicOtherInput(t *testing.T) {
 func TestCase_BasicOtherRandomness(t *testing.T) {
 	testCase(t, "basic_other_randomness")
 }
+
+func TestCase_BasicRepetitions(t *testing.T) {
+	testCase(t, "basic_repetitions")
+}

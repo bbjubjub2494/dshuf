@@ -4,7 +4,7 @@ DRAFT 2023-03-02
 
 The dshuf protocol allows any number of participants
 that don't trust each other
-to generate a random permutation of an arbitrary list
+to generate a random permutation or a sequence of random elements of an arbitrary list
 using a random beacon.
 
 
@@ -25,7 +25,8 @@ Thus, users must assume that DRand is working as designed when they use dshuf.
 
 Participants must agree on a canonical representation of the items they want to shuffle,
 which must consist of a byte representation of each entry and an initial order.
-They must also agree on when and how the random beacon will be consulted.
+They must also agree on whether to allow repetitions,
+and when and how the random beacon will be consulted.
 In the DRand case they must choose a round number in the future.
 
 
@@ -35,11 +36,16 @@ All participants consult the random beacon to learn the random value.
 They then execute the following program:
 - evaluate the `blake3` extendable output function with the random value as the key,
 and the canonical representation of the entries preceded by the big-endian, 8 byte representation of their length in bytes as input.
-- Store the input list in an array `t` in canonical order.
-- Then, for `i` in `0 .. len(t)`:
-  - pull the next 192 bits from the output of `blake3` and interpret them as a big-endian integer value `r`.
-  - swap `t[i]` and `t[i + (r mod (len(t)-i))]`.
-- Return the final contents of `t` as the shuffled output.
+- Then if repetitions are allowed:
+  - As long as elements need to be produced:
+    - pull the next 192 bits from the output of `blake3` and interpret them as a big-endian integer value `r`.
+    - emit `t[r mod len(t)]` as the next output element.
+- Otherwise:
+  - Store the input list in an array `t` in canonical order.
+  - Then, for `i` in `0 .. len(t)`:
+    - pull the next 192 bits from the output of `blake3` and interpret them as a big-endian integer value `r`.
+    - swap `t[i]` and `t[i + (r mod (len(t)-i))]`.
+  - Return the final contents of `t` as the shuffled output.
 
 
 ## Security Goals
@@ -51,7 +57,9 @@ no two honest participants derive different output lists.
 
 ### Fairness
 
-All permutations of the input lists are equally likely to be selected.
+All permutations of the input list,
+or in repetitions enabled case all sequences,
+are equally likely to be selected.
 (except with negligible probability)
 
 
