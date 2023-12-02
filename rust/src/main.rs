@@ -22,6 +22,8 @@ struct Args {
         help = "round number of beacon to use for randomness"
     )]
     beacon: u64,
+    #[arg(short = 'r', long = "repeat", help = "output lines can be repeated")]
+    repetitions: bool,
     #[arg(value_name = "FILE")]
     file: Option<String>,
     #[arg(
@@ -43,7 +45,6 @@ fn main() {
     };
 
     let randomness = drand_api::get_beacon(round_number).unwrap().randomness();
-    // simulate shuf -n 3
     let mut buf = Vec::new();
     (match inputfile {
         None => io::stdin().read_to_end(&mut buf),
@@ -51,15 +52,25 @@ fn main() {
     })
     .unwrap();
     let mut input = Vec::from_iter(buf.split(|c| *c == separator as u8));
-    let limit = count.unwrap_or(input.len());
     if input.last().map_or(false, |e| e.len() == 0) {
         input.truncate(input.len() - 1);
     }
-    let output = shuffle(randomness.as_slice().try_into().unwrap(), input, limit);
+    let output = shuffle(
+        randomness.as_slice().try_into().unwrap(),
+        input,
+        args.repetitions,
+    );
 
     let mut stdout = io::stdout();
-    for e in output {
-        stdout.write_all(e).unwrap();
-        stdout.write_all(&[separator as u8]).unwrap();
+    if let Some(limit) = count {
+        for e in output.take(limit) {
+            stdout.write_all(e).unwrap();
+            stdout.write_all(&[separator as u8]).unwrap();
+        }
+    } else {
+        for e in output {
+            stdout.write_all(e).unwrap();
+            stdout.write_all(&[separator as u8]).unwrap();
+        }
     }
 }

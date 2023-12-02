@@ -13,6 +13,7 @@ struct TestCase {
     input: Vec<String>,
     randomness: String,
     limit: usize,
+    repetitions: bool,
     output: Vec<String>,
 }
 
@@ -36,5 +37,10 @@ fn it_works(name: &str) {
     let randomness = hex::decode(tc.randomness).unwrap();
     let limit = tc.limit;
     let output: Vec<&[u8]> = tc.output.iter().map(|v| v.as_bytes()).collect();
-    assert_eq!(output, shuffle(randomness[..].try_into().unwrap(), input, limit));
+    assert_eq!(
+        output,
+        shuffle(randomness[..].try_into().unwrap(), input, tc.repetitions)
+            .take(limit)
+            .collect::<Vec<_>>()
+    );
 }

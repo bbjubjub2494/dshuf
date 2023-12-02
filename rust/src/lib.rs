@@ -1,7 +1,7 @@
 pub mod drand_api;
-mod core;
+pub mod shuffle;
 
-pub use crate::core::shuffle;
+pub use crate::shuffle::shuffle;
 
 #[cfg(test)]
 mod tests;
