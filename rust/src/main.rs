@@ -24,11 +24,17 @@ struct Args {
     beacon: u64,
     #[arg(value_name = "FILE")]
     file: Option<String>,
+    #[arg(
+        short = 'z',
+        long = "zero-terminated",
+        help = "line delimiter is NUL, not newline"
+    )]
+    zero_sep: bool,
 }
 
 fn main() {
     let args = Args::parse();
-    let separator = '\n';
+    let separator = if args.zero_sep { 0 } else { b'\n' };
     let count = args.head_count;
     let round_number = args.beacon;
     let inputfile: Option<File> = match args.file.as_deref() {
