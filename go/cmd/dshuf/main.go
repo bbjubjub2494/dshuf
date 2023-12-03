@@ -46,6 +46,7 @@ var cli struct {
 	HeadCount *int    `short:"n" long:"head-count" placeholder:"COUNT" help:"output at most this many lines"`
 	Beacon    *uint64 `short:"b" required:"" help:"round number of beacon to use for randomness"`
 	File      string  `arg:"" optional:"" type:"existingfile"`
+	ZeroSep   bool    `short:"z" long:"zero-terminated" help:"line delimiter is NUL, not newline"`
 }
 
 func main() {
@@ -64,6 +65,9 @@ func main() {
 	input, err := io.ReadAll(inputFile)
 	ctx.FatalIfErrorf(err)
 	separator := []byte("\n")
+	if cli.ZeroSep {
+		separator = []byte{0}
+	}
 	entries := bytes.Split(input, separator)
 	if len(entries[len(entries)-1]) == 0 {
 		entries = entries[:len(entries)-1]
