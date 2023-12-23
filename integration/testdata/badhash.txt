@@ -1,0 +1,17 @@
+stdin input
+# The go library ignores the returned hash, whereas the rust library checks it and errors if it's wrong.
+# both are acceptable.
+[rust] ! exec dshuf --beacon=5
+[go] exec dshuf --beacon=5
+[go] cmp stdout output
+
+-- input --
+Alice
+Bob
+Carla
+David
+-- output --
+David
+Bob
+Alice
+Carla

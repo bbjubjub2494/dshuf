@@ -27,8 +27,6 @@ func DefaultClient() (client.Client, error) {
 }
 
 func makeClient(chainInfo *chain.Info) (client.Client, error) {
-	chainHashBytes := chainInfo.Hash()
-
 	urls := []string{
 		"https://api.drand.sh",
 		"https://drand.cloudflare.com",
@@ -38,7 +36,7 @@ func makeClient(chainInfo *chain.Info) (client.Client, error) {
 	}
 
 	return client.New(
-		client.From(http.ForURLs(urls, chainHashBytes)...),
-		client.WithChainHash(chainHashBytes),
+		client.From(http.ForURLs(urls, chainInfo.Hash())...),
+		client.WithChainInfo(chainInfo),
 	)
 }

@@ -64,15 +64,15 @@
 
         formatter = pkgs.alejandra;
 
-        checks = builtins.mapAttrs (_: impl:
+        checks = pkgs.lib.genAttrs ["go" "rust"] (impl:
           pkgs.buildGoModule {
-            name = "${impl.pname}-check";
+            name = "dshuf-${impl}-check";
             src = ./integration;
 
             vendorHash = "sha256-1p3dCLLo+MTPxf/Y3zjxTagUi+tq7nZSj4ZB/aakJGY=";
-            nativeCheckInputs = [impl];
-          })
-        implementations;
+            nativeCheckInputs = [implementations."dshuf-${impl}"];
+            checkFlags = ["-test.run" "/impl=${impl}"];
+          });
       };
     };
 }
