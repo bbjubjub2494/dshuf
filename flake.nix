@@ -41,7 +41,7 @@
             version = "unstable";
             srcs = [./rust ./testcases];
             sourceRoot = "rust";
-            cargoHash = "sha256-9SoJTeGY7zrTipl4p/ZdJbB3BXERXzECx5AYI+1Y8eI=";
+            cargoHash = "sha256-hu4JQ5UZKusFNbep7Gwk8oGOzOtGuvoHhZEWKzB80ho=";
 
             buildInputs = [
               openssl.dev
