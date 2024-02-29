@@ -32,7 +32,7 @@
             ./testcases
           ];
           sourceRoot = "src";
-          vendorHash = "sha256-k6fgQ022tmhFeNFo5x/7ZK4Pv6bOqh4eI4mKQ5gje9g=";
+          vendorHash = "sha256-GbicbJmyrQRiTW4byF3lkM01fMhclkIdSgub/C4rzQw=";
         };
 
         implementations.dshuf-rust = with pkgs;
@@ -41,7 +41,7 @@
             version = "unstable";
             srcs = [./rust ./testcases];
             sourceRoot = "rust";
-            cargoHash = "sha256-9SoJTeGY7zrTipl4p/ZdJbB3BXERXzECx5AYI+1Y8eI=";
+            cargoHash = "sha256-hu4JQ5UZKusFNbep7Gwk8oGOzOtGuvoHhZEWKzB80ho=";
 
             buildInputs = [
               openssl.dev
@@ -64,15 +64,15 @@
 
         formatter = pkgs.alejandra;
 
-        checks = builtins.mapAttrs (_: impl:
+        checks = pkgs.lib.genAttrs ["go" "rust"] (impl:
           pkgs.buildGoModule {
-            name = "${impl.pname}-check";
+            name = "dshuf-${impl}-check";
             src = ./integration;
 
             vendorHash = "sha256-1p3dCLLo+MTPxf/Y3zjxTagUi+tq7nZSj4ZB/aakJGY=";
-            nativeCheckInputs = [impl];
-          })
-        implementations;
+            nativeCheckInputs = [implementations."dshuf-${impl}"];
+            checkFlags = ["-test.run" "/impl=${impl}"];
+          });
       };
     };
 }

@@ -1,6 +1,7 @@
 package integration
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -28,6 +29,15 @@ func mockDrandEndpoint() (endpoint string, err error) {
 			w.Write([]byte(`{"round":1,"randomness":"1466a6cd24e327188770752f6134001c64d6efcc590ccc26b721611ad96f165a","signature":"b55e7cb2d5c613ee0b2e28d6750aabbb78c39dcc96bd9d38c2c2e12198df95571de8e8e402a0cc48871c7089a2b3af4b"}`))
 		case "2":
 			w.Write([]byte(`{"round":2,"randomness":"5782d6987841c654515a0e72b2d1ebb4e741234042c37cb19608ae50d93fb60c","signature":"b6b6a585449b66eb12e875b64fcbab3799861a00e4dbf092d99e969a5eac57dd3f798acf61e705fe4f093db926626807"}`))
+		case "3":
+			// bad signature
+			w.Write([]byte(`{"round":3,"randomness":"7ef4621ace1c6da4eb2eee7cd901f81385bca5b189771ec0f08d0d2566dd1a21","signature":"b6b6a585449b66eb12e875b64fcbab3799861a00e4dbf092d99e969a5eac57dd3f798acf61e705fe4f093db926626807"}`))
+		case "4":
+			// wrong round number
+			w.Write([]byte(`{"round":3,"randomness":"7ef4621ace1c6da4eb2eee7cd901f81385bca5b189771ec0f08d0d2566dd1a21","signature":"b3fab6df720b68cc47175f2c777e86d84187caab5770906f515ff1099cb01e4deaa027075d860823e49477b93c72bd64"}`))
+		case "5":
+			// bad hash
+			w.Write([]byte(`{"round":5,"randomness":"7ef4621ace1c6da4eb2eee7cd901f81385bca5b189771ec0f08d0d2566dd1a21","signature":"830c14582e34336e45a188cc7acd19661a4d97c455b502f431c959d26c006080d456d890b80d1d7c151dd149726c764a"}`))
 		default:
 			w.WriteHeader(http.StatusNotFound)
 		}
@@ -46,11 +56,33 @@ func TestScript(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	for _, impl := range []string{"go", "rust"} {
+		t.Run("impl="+impl, func(t *testing.T) { scriptTest(t, addr, impl) })
+	}
+}
+
+func scriptTest(t *testing.T, addr string, impl string) {
+	switch impl {
+	case "go":
+		os.Setenv("PATH", os.Getenv("HOME")+"/go/bin:"+os.Getenv("PATH"))
+	case "rust":
+		os.Setenv("PATH", os.Getenv("HOME")+"/.cargo/bin:"+os.Getenv("PATH"))
+	default:
+		t.Fatal("unknown impl")
+	}
+
 	testscript.Run(t, testscript.Params{
 		Dir: "testdata",
 		Setup: func(env *testscript.Env) error {
 			env.Setenv("DSHUF_ENDPOINT", addr)
 			return nil
+		},
+		Condition: func(cond string) (bool, error) {
+			switch cond {
+			case "go", "rust":
+				return impl == cond, nil
+			}
+			return false, fmt.Errorf("unsupported condition: %s", cond)
 		},
 	})
 }
