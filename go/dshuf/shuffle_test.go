@@ -39,10 +39,11 @@ func unwrap(b []string) [][]byte {
 }
 
 type TestCase struct {
-	Input      []string `json:"input"`
-	Randomness HexBytes `json:"randomness"`
-	Limit      int      `json:"limit"`
-	Output     []string `json:"output"`
+	Input       []string `json:"input"`
+	Randomness  HexBytes `json:"randomness"`
+	Limit       int      `json:"limit"`
+	Repetitions bool     `json:"repetitions"`
+	Output      []string `json:"output"`
 }
 
 func loadTestCase(t *testing.T, name string) (tc TestCase) {
@@ -76,10 +77,20 @@ func checkListEqual(t *testing.T, expected, actual [][]byte) {
 func testCase(t *testing.T, name string) {
 	tc := loadTestCase(t, name)
 	input := unwrap(tc.Input)
+	var output [][]byte
 
-	ShuffleInplace(tc.Randomness, &input, tc.Limit)
+	if tc.Repetitions {
+		output = make([][]byte, tc.Limit)
+		c := ShuffleWithReplacement(tc.Randomness, input)
+		for i := 0; i < tc.Limit; i++ {
+			output[i] = <-c
+		}
+	} else {
+		ShuffleInplace(tc.Randomness, &input, tc.Limit)
+		output = input
+	}
 
-	checkListEqual(t, unwrap(tc.Output), input)
+	checkListEqual(t, unwrap(tc.Output), output)
 }
 
 func TestCase_Basic(t *testing.T) {
@@ -100,4 +111,8 @@ func TestCase_BasicOtherInput(t *testing.T) {
 
 func TestCase_BasicOtherRandomness(t *testing.T) {
 	testCase(t, "basic_other_randomness")
+}
+
+func TestCase_BasicRepetitions(t *testing.T) {
+	testCase(t, "basic_repetitions")
 }
