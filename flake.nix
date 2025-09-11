@@ -31,7 +31,6 @@
             version = "unstable";
             srcs = [./rust ./testcases];
             sourceRoot = "rust";
-            useFetchCargoVendor = true;
             cargoHash = "sha256-RdkF6J7rIBNGjQHvDYuw+bBVPqP+TMylubILxV1pI+4=";
 
             buildInputs = [
