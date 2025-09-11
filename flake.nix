@@ -32,7 +32,7 @@
             srcs = [./rust ./testcases];
             sourceRoot = "rust";
             useFetchCargoVendor = true;
-            cargoHash = "sha256-GT4AF9PKAntS5GD8TlSnNpxSmUBoVY6ri0t61XTGTas=";
+            cargoHash = "sha256-RdkF6J7rIBNGjQHvDYuw+bBVPqP+TMylubILxV1pI+4=";
 
             buildInputs = [
               openssl.dev
