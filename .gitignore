@@ -1,2 +1,9 @@
-target
-.direnv
+# direnv
+.direnv/
+
+# nix
+result
+result-*
+
+# rust
+target/
