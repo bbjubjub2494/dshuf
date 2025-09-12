@@ -22,7 +22,7 @@
             ./testcases
           ];
           sourceRoot = "src";
-          vendorHash = "sha256-GbicbJmyrQRiTW4byF3lkM01fMhclkIdSgub/C4rzQw=";
+          vendorHash = "sha256-J4jDDgkn6q15K9sAY9tPjHinN0Ci5HyMOoUoP6udOBY=";
         };
 
         implementations.dshuf-rust = with pkgs;
