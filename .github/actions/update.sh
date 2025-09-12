@@ -50,10 +50,6 @@ if [ "$type" = "package" ]; then
   new_version=$(nix eval .#packages.x86_64-linux."$name".version --raw 2>/dev/null || echo "unknown")
   echo "New version: $new_version"
 
-  # Run formatter to update README with mdsh
-  echo "Running formatter to update documentation..."
-  nix fmt
-
   # Build the package to verify the update
   echo "Building package to verify update..."
   nix build .#"$name" --no-link
