@@ -7,6 +7,11 @@
     blueprint.inputs.nixpkgs.follows = "nixpkgs";
   };
 
+  nixConfig = {
+    extra-substituters = "https://dshuf.cachix.org";
+    extra-trusted-public-keys = "dshuf.cachix.org-1:DdwhVB1EbEOhBfcGVRjwJYv+SsA9Iba8u290OoBeCps=";
+  };
+
   outputs = inputs:
     inputs.blueprint {
       inherit inputs;
