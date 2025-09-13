@@ -12,7 +12,7 @@ in
     srcs = [rust testcases];
     sourceRoot = "rust";
 
-    cargoHash = "sha256-RdkF6J7rIBNGjQHvDYuw+bBVPqP+TMylubILxV1pI+4=";
+    cargoHash = "sha256-lvHApkdp1coOF57+OnKCzV9o+i7XmIcG7qYz9u/dhBg=";
 
     buildInputs = [
       pkgs.openssl.dev
