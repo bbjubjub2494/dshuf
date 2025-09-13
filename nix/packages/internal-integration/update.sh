@@ -6,4 +6,4 @@ set -euo pipefail
 	go get -u ./...
 )
 
-nix-update dshuf-go --flake --version=skip
+nix-update internal-integration --flake --version=skip
