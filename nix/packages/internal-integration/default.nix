@@ -1,7 +1,5 @@
-{
-  pkgs,
-  flake,
-}:
+{ flake, pkgs }:
+
 pkgs.buildGoModule {
   name = "dshuf-integration";
   src = "${flake}/integration";

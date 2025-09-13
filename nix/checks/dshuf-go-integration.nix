@@ -1,12 +1,12 @@
-{
-  flake,
-  system,
-  ...
-}:
-with flake.packages.${system};
-  internal-integration.overrideAttrs (_: {
-    nativeCheckInputs = [dshuf-go];
-    checkFlags = ["-test.run" "/impl=go"];
+{ flake, system, ... }:
 
-    doCheck = true;
-  })
+with flake.packages.${system};
+internal-integration.overrideAttrs (_: {
+  nativeCheckInputs = [ dshuf-go ];
+  checkFlags = [
+    "-test.run"
+    "/impl=go"
+  ];
+
+  doCheck = true;
+})

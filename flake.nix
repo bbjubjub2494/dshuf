@@ -12,7 +12,8 @@
     extra-trusted-public-keys = "dshuf.cachix.org-1:DdwhVB1EbEOhBfcGVRjwJYv+SsA9Iba8u290OoBeCps=";
   };
 
-  outputs = inputs:
+  outputs =
+    inputs:
     inputs.blueprint {
       inherit inputs;
       prefix = "nix";
