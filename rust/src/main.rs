@@ -51,8 +51,8 @@ fn main() {
         Some(mut f) => f.read_to_end(&mut buf),
     })
     .unwrap();
-    let mut input = Vec::from_iter(buf.split(|c| *c == separator as u8));
-    if input.last().map_or(false, |e| e.len() == 0) {
+    let mut input = Vec::from_iter(buf.split(|c| *c == separator));
+    if input.last().is_some_and(|e| e.is_empty()) {
         input.truncate(input.len() - 1);
     }
     let output = shuffle(
@@ -65,12 +65,12 @@ fn main() {
     if let Some(limit) = count {
         for e in output.take(limit) {
             stdout.write_all(e).unwrap();
-            stdout.write_all(&[separator as u8]).unwrap();
+            stdout.write_all(&[separator]).unwrap();
         }
     } else {
         for e in output {
             stdout.write_all(e).unwrap();
-            stdout.write_all(&[separator as u8]).unwrap();
+            stdout.write_all(&[separator]).unwrap();
         }
     }
 }
