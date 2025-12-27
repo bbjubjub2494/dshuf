@@ -14,7 +14,7 @@ pkgs.rustPlatform.buildRustPackage {
   ];
   sourceRoot = "rust";
 
-  cargoHash = "sha256-51LiZbNqNcuIfBsUz+xP2ZAYowNX6Ee9c0jkkO6hQOo=";
+  cargoHash = "sha256-sdbKje9o3LFkkuftVNhsr2MBis8WRpDx7sc7ziiFNXk=";
 
   buildInputs = [
     pkgs.openssl.dev
