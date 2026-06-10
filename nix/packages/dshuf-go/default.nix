@@ -20,5 +20,5 @@ pkgs.buildGoModule rec {
   # workaround: src is a mandatory argument
   inherit src;
 
-  vendorHash = "sha256-yVOBVoJ1AE3DMfJefGQnQQ8OqzueX64vY6LCmXSh9Jg=";
+  vendorHash = "sha256-h36Whc5xDn8eKdijNtpS7a12pZSgRbQMXxt1EqH6dO8=";
 }
